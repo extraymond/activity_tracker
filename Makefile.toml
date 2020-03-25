@@ -1,0 +1,37 @@
+[tasks.build-css]
+command = "parcel"
+args = ["build", "static/index.scss", "-d", "docs/styles"]
+
+[tasks.build-wasm-dev]
+command = "wasm-pack"
+args = ["build", "--debug", "-t", "web", "-d", "docs/pkg"]
+
+[tasks.build-wasm-release]
+command = "wasm-pack"
+args = ["build", "--release", "-t", "web", "-d", "docs/pkg", "--", "--features", "release"]
+
+[tasks.migrate-static]
+command = "cp"
+args = ["-r", "static/assets", "docs"]
+dependencies = ["clean-build"]
+
+[tasks.clean-build]
+command = "rm"
+args = ["-rf", "docs"]
+
+[tasks.gzip]
+command = "gzip"
+args = ["-rk9f", "docs/"]
+
+
+[tasks.check]
+command = "cargo"
+args = ["check"]
+
+[tasks.serve]
+command = "serve"
+args = ["docs"]
+
+[tasks.dev]
+watch = { watch = ["src", "static"] }
+dependencies = ["check", "migrate-static", "build-wasm-dev", "build-css"]

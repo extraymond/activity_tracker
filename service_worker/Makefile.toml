@@ -1,0 +1,26 @@
+[tasks.live-build]
+watch = { watch = ["./src", "./Cargo.toml"] }
+command = "wasm-pack"
+args = ["build", "--debug", "-t", "no-modules", "-d", "../docs", "--no-typescript"]
+dependencies = ["check"]
+
+[tasks.build-release]
+command = "wasm-pack"
+args = ["build", "--release", "-t", "no-modules", "-d", "../docs", "--no-typescript"]
+
+
+[tasks.cleanup]
+command = "rm"
+args= ["../docs/.gitignore", "../docs/package.json"]
+
+[tasks.cleanbuild]
+command = "rm"
+args = ["-f", "../docs/service_worker*"]
+
+[tasks.make-release]
+dependencies = ["cleanbuild", "build-release", "cleanup"]
+
+
+[tasks.check]
+command = "cargo"
+args = ["check"]
